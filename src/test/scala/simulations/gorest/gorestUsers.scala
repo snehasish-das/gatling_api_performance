@@ -32,6 +32,7 @@ class gorestUsers extends Simulation{
     http("Delete user")
       .delete("/users/"+userId)
   }
+
   val scn = scenario("Create User")
     .exec(createUser().check(jsonPath("$.id").saveAs("userId")))
     .pause(3000.milliseconds)
