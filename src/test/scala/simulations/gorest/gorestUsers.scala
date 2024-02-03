@@ -7,7 +7,7 @@ import io.gatling.http.Predef._
 import scala.concurrent.duration.DurationInt
 
 class gorestUsers extends Simulation{
-  val http_conf = new HttpConf().getHttpConfig();
+  val http_conf = new HttpConf().getHttpConfig()
   val scn = scenario("Create User")
     .exec(
       http("Create new User")
@@ -22,6 +22,18 @@ class gorestUsers extends Simulation{
         .get("/users/${userId}")
         .check(status is(200))
         .check(jsonPath("$.name").is("Snehasish"))
+    )
+    .pause(1,5)
+    .exec(
+      http("Update User")
+        .patch("/users/${userId}")
+        .body(RawFileBody("./src/test/resources/payloads/gorestUpdateUser.json")).asJson
+        .check(jsonPath("$.email").not("tentative011@gmail.com"))
+    )
+    .pause(3)
+    .exec(
+      http("Delete user")
+        .delete("/users/${userId}")
     )
 
   //execution
